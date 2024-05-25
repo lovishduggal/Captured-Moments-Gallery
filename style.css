@@ -5,16 +5,83 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: rgb(65, 65, 65);
+    background-color: #202020;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
 }
 
 .video-cont {
     height: 100vh;
-    width: 100vw;
+    width: 80vw;
+    padding: 1rem 0;
+    object-fit: cover;
 }
 
 video {
     display: block;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+}
+
+.actions-wrapper-filter,
+.actions-wrapper-cap-rec {
+    width: 10vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actions-wrapper-filter {
+    padding-left: 1rem;
+}
+
+.actions-wrapper-cap-rec {
+    padding-right: 1rem;
+}
+
+.actions-cont-right {
+    height: 15rem;
+    width: 5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.actions-cont-left {
+    height: 25rem;
+    width: 5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.actions-cont-left > * {
+    width: 100%;
+    height: 5rem;
+    background-color: transparent;
+    border-radius: 2px;
+    border: 2px solid white;
+}
+
+.actions-cont-right > * {
+    width: 100%;
+    height: 5rem;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.record-btn,
+.capture-btn {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
 }
