@@ -15,19 +15,18 @@ let constraints = {
 };
 
 /**
- * Requests access to the user's media devices (e.g., camera and microphone) based on the provided constraints.
- * If access is granted, it sets up a video stream and initializes a MediaRecorder to record the stream.
+ * Requests access to the user's media devices and handles the media stream.
  *
- * @param {Object} constraints - The constraints object specifying the desired media types and settings.
+ * @param {MediaStreamConstraints} constraints - The constraints for the media stream.
  */
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-    // Set the video element's source to the media stream
+    // Set the source object of the video element to the media stream
     video.srcObject = stream;
 
-    // Initialize the MediaRecorder with the media stream
+    // Create a new MediaRecorder instance to record the media stream
     recorder = new MediaRecorder(stream);
 
-    // Event listener for when recording starts
+    // Event listener for when the recording starts
     recorder.addEventListener('start', () => {
         chunks = [];
     });
@@ -37,7 +36,7 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         chunks.push(e.data);
     });
 
-    // Event listener for when recording stops
+    // Event listener for when the recording stops
     recorder.addEventListener('stop', () => {
         // Create a Blob from the recorded chunks
         const blob = new Blob(chunks, { type: 'video/mp4' });
@@ -45,7 +44,7 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         // Create a URL for the Blob
         const videoUrl = URL.createObjectURL(blob);
 
-        // Create an anchor element to download the recorded video
+        // Create a temporary anchor element to trigger the download
         const a = document.createElement('a');
         a.href = videoUrl;
         a.download = 'stream.mp4';
@@ -62,17 +61,15 @@ recordBtnCont.addEventListener('click', () => {
     recordFlag = !recordFlag;
 
     if (recordFlag) {
-        // Start recording
-        videoCont.style.height = 'calc(100vh - 114px)';
         recorder.start();
         startTimer();
         recordBtn.classList.add('scale-record');
+        videoCont.style.height = 'calc(100vh - 114px)';
     } else {
-        // Stop recording
-        videoCont.style.height = '100vh';
         recorder.stop();
         stopTimer();
         recordBtn.classList.remove('scale-record');
+        videoCont.style.height = '100vh';
     }
 });
 
@@ -82,7 +79,7 @@ const timer = document.querySelector('.timer');
 const timerCont = document.querySelector('.timer-cont');
 /**
  * Starts a timer that updates every second and displays the elapsed time in HH:MM:SS format.
- * The timer is displayed in an element with the ID 'timer'.
+ * The timer is displayed in an HTML element with the id 'timer'.
  * The timer container is made visible when the timer starts.
  */
 function startTimer() {
@@ -100,22 +97,24 @@ function startTimer() {
         let seconds = totalSeconds % 60;
 
         seconds = seconds < 10 ? `0${seconds}` : seconds;
-        /**
-         * Stops the timer by hiding the timer container, clearing the interval, and resetting the timer display.
-         */
-        function stopTimer() {
-            timerCont.style.display = 'none';
-            clearInterval(timerID);
-            timer.innerText = '00:00:00';
-        }
+        minutes = minutes < 10 ? `0${minutes}` : minutes;
+        hours = hours < 10 ? `0${hours}` : hours;
+
+        timer.innerText = `${hours}:${minutes}:${seconds}`;
+
         counter++;
     }
 
     timerID = setInterval(displayTimer, 1000);
 }
 
+/**
+ * Stops the timer by clearing the interval, resetting the timer display,
+ * hiding the timer container, and resetting the counter.
+ */
 function stopTimer() {
-    timerCont.style.display = 'none';
     clearInterval(timerID);
     timer.innerText = '00:00:00';
+    timerCont.style.display = 'none';
+    counter = 0;
 }
