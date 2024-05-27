@@ -49,6 +49,8 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         a.href = videoUrl;
         a.download = 'stream.mp4';
         a.click();
+
+        URL.revokeObjectURL(videoUrl);
     });
 });
 
