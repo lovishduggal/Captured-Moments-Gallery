@@ -66,7 +66,6 @@ video {
     height: 5rem;
     background-color: transparent;
     border-radius: 2px;
-    border: 2px solid white;
 }
 
 .actions-cont-right > * {
@@ -91,6 +90,14 @@ video {
 
 .capture-btn {
     color: white;
+}
+
+.filter-btn {
+    background-image: url(./filter-pic.jpg);
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 5rem;
 }
 
 .scale-record {

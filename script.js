@@ -21,7 +21,7 @@ let constraints = {
  */
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     // Set the source object of the video element to the media stream
-    video.srcObject = stream;
+    // video.srcObject = stream;
 
     // Create a new MediaRecorder instance to record the media stream
     recorder = new MediaRecorder(stream);
@@ -73,6 +73,21 @@ recordBtnCont.addEventListener('click', () => {
         recordBtn.classList.remove('scale-record');
         videoCont.style.height = '100vh';
     }
+});
+
+captureBtnCont.addEventListener('click', (e) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+    const imageURL = canvas.toDataURL();
+    const a = document.createElement('a');
+    a.href = imageURL;
+    a.download = 'image.jpg';
+    a.click();
 });
 
 let timerID;
