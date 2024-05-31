@@ -1,9 +1,13 @@
+const body = document.querySelector('body');
 const video = document.querySelector('video');
 const videoCont = document.querySelector('.video-cont');
 const recordBtnCont = document.querySelector('.record-btn-cont');
 const captureBtnCont = document.querySelector('.capture-btn-cont');
 const recordBtn = document.querySelector('.record-btn');
 const captureBtn = document.querySelector('.capture-btn');
+const filterCont = document.querySelector('.actions-cont-left');
+const filterLayerCont = document.querySelector('.filter-layer');
+let filterColor = 'transparent';
 let recordFlag = false;
 
 let recorder;
@@ -21,7 +25,7 @@ let constraints = {
  */
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     // Set the source object of the video element to the media stream
-    // video.srcObject = stream;
+    video.srcObject = stream;
 
     // Create a new MediaRecorder instance to record the media stream
     recorder = new MediaRecorder(stream);
@@ -79,10 +83,17 @@ captureBtnCont.addEventListener('click', (e) => {
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
+    console.log(
+        canvas.width,
+        canvas.height,
+        video.videoWidth,
+        video.videoHeight
+    );
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+    ctx.fillStyle = filterColor;
+    ctx.fillRect(0, 0, video.videoWidth, video.videoHeight);
 
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     const imageURL = canvas.toDataURL();
     const a = document.createElement('a');
     a.href = imageURL;
@@ -135,3 +146,23 @@ function stopTimer() {
     timerCont.style.display = 'none';
     counter = 0;
 }
+
+/**
+ * Adds a click event listener to the filter container element.
+ * When the filter container is clicked, it retrieves the background color
+ * of the clicked target element, applies it to the filter layer container,
+ * and sets the body's background color accordingly.
+ */
+filterCont.addEventListener('click', (e) => {
+    // Get the background color of the clicked target element
+    filterColor = getComputedStyle(e.target).getPropertyValue(
+        'background-color'
+    );
+
+    // Apply the retrieved color to the filter layer container
+    filterLayerCont.style.backgroundColor = filterColor;
+
+    // Set the body's background color based on the retrieved color
+    body.style.backgroundColor =
+        filterColor === 'rgba(0, 0, 0, 0)' ? 'wheat' : filterColor;
+});
