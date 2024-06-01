@@ -44,17 +44,22 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     recorder.addEventListener('stop', () => {
         // Create a Blob from the recorded chunks
         const blob = new Blob(chunks, { type: 'video/mp4' });
+        if (db) {
+            db.transaction('video', 'readwrite').objectStore('video').add({
+                id: shortid.generate(),
+                video: blob,
+            });
+        }
 
         // Create a URL for the Blob
-        const videoUrl = URL.createObjectURL(blob);
-
+        // const videoUrl = URL.createObjectURL(blob);
         // Create a temporary anchor element to trigger the download
-        const a = document.createElement('a');
-        a.href = videoUrl;
-        a.download = 'stream.mp4';
-        a.click();
+        // const a = document.createElement('a');
+        // a.href = videoUrl;
+        // a.download = 'stream.mp4';
+        // a.click();
 
-        URL.revokeObjectURL(videoUrl);
+        // URL.revokeObjectURL(videoUrl);
     });
 });
 
