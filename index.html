@@ -48,9 +48,17 @@
     <div class="timer-cont">
         <div class="timer">00:00:00</div>
     </div>
+    <div class="gallery-cont"><i class="fa-solid fa-image fa-3x"></i></div>
     <div class="filter-layer"></div>
+    <script src="https://unpkg.com/shortid-dist@1.0.5/dist/shortid-2.2.13.min.js"></script>
     <script src="./db.js"></script>
-    <script src="./script.js" type="module"></script>
+    <script src="./script.js"></script>
+    <script>
+        const gallery = document.querySelector('.gallery-cont');
+        gallery.addEventListener('click', () => {
+            location.assign("/gallery.html");
+        })
+    </script>
 </body>
 
 </html>

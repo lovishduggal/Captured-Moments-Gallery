@@ -9,7 +9,6 @@ const filterCont = document.querySelector('.actions-cont-left');
 const filterLayerCont = document.querySelector('.filter-layer');
 let filterColor = 'transparent';
 let recordFlag = false;
-
 let recorder;
 let chunks = []; // Media data in chunks.
 
@@ -45,21 +44,13 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         // Create a Blob from the recorded chunks
         const blob = new Blob(chunks, { type: 'video/mp4' });
         if (db) {
-            db.transaction('video', 'readwrite').objectStore('video').add({
-                id: shortid.generate(),
-                video: blob,
-            });
+            db.transaction('video', 'readwrite')
+                .objectStore('video')
+                .add({
+                    id: `vid-${shortid()}`,
+                    blob,
+                });
         }
-
-        // Create a URL for the Blob
-        // const videoUrl = URL.createObjectURL(blob);
-        // Create a temporary anchor element to trigger the download
-        // const a = document.createElement('a');
-        // a.href = videoUrl;
-        // a.download = 'stream.mp4';
-        // a.click();
-
-        // URL.revokeObjectURL(videoUrl);
     });
 });
 
@@ -85,25 +76,25 @@ recordBtnCont.addEventListener('click', () => {
 });
 
 captureBtnCont.addEventListener('click', (e) => {
+    captureBtn.classList.add('scale-capture');
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    console.log(
-        canvas.width,
-        canvas.height,
-        video.videoWidth,
-        video.videoHeight
-    );
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = filterColor;
     ctx.fillRect(0, 0, video.videoWidth, video.videoHeight);
 
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     const imageURL = canvas.toDataURL();
-    const a = document.createElement('a');
-    a.href = imageURL;
-    a.download = 'image.jpg';
-    a.click();
+    if (db) {
+        db.transaction('image', 'readwrite')
+            .objectStore('image')
+            .add({
+                id: `img-${shortid()}`,
+                url: imageURL,
+            });
+    }
+    setTimeout(() => captureBtn.classList.remove('capture-record'), 10);
 });
 
 let timerID;
