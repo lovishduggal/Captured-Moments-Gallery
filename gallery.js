@@ -98,10 +98,12 @@ function downloadListener(e) {
         const imageStore = imageDBTransaction.objectStore('image');
         const imageRequest = imageStore.get(id);
         imageRequest.onsuccess = (e) => {
+            console.log(id.slice(0, 3));
             const image = imageRequest.result;
             const a = document.createElement('a');
             a.href = image.url;
             a.download = 'image.jpg';
+            a.click();
         };
     }
 }

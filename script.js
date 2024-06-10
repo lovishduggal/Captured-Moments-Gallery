@@ -66,12 +66,12 @@ recordBtnCont.addEventListener('click', () => {
         recorder.start();
         startTimer();
         recordBtn.classList.add('scale-record');
-        videoCont.style.height = 'calc(100vh - 114px)';
+        videoCont.style.height = 'calc(100vh - 114px - 92px)';
     } else {
         recorder.stop();
         stopTimer();
         recordBtn.classList.remove('scale-record');
-        videoCont.style.height = '100vh';
+        videoCont.style.height = 'calc(100vh - 92px)';
     }
 });
 
@@ -81,10 +81,10 @@ captureBtnCont.addEventListener('click', (e) => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
+    ctx.filter = `brightness(${rangeInput.value}%)`;
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     ctx.fillStyle = filterColor;
     ctx.fillRect(0, 0, video.videoWidth, video.videoHeight);
-
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     const imageURL = canvas.toDataURL();
     if (db) {
         db.transaction('image', 'readwrite')

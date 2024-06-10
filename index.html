@@ -13,6 +13,13 @@
 </head>
 
 <body>
+    <div class="range-cont">
+        <div class="brightness-box">
+            <i class="far fa-sun"></i>
+            <input type="range" id="range" min="30" max="100" value="100" step="5">
+            <i class="fas fa-sun"></i>
+        </div>
+    </div>
     <main>
         <div class="actions-wrapper-filter">
             <div class="actions-cont-left">
@@ -55,9 +62,14 @@
     <script src="./script.js"></script>
     <script>
         const gallery = document.querySelector('.gallery-cont');
+        const rangeInput = document.getElementById('range');
         gallery.addEventListener('click', () => {
             location.assign("/gallery.html");
         })
+
+        rangeInput.addEventListener("change", function () {
+            video.style.filter = "brightness(" + rangeInput.value + "%)";
+        });
     </script>
 </body>
 
