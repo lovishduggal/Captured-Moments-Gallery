@@ -22,12 +22,42 @@ let constraints = {
  *
  * @param {MediaStreamConstraints} constraints - The constraints for the media stream.
  */
+// Create a canvas element
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     // Set the source object of the video element to the media stream
     video.srcObject = stream;
 
+    // Set the canvas dimensions to match the video dimensions
+    video.addEventListener('loadedmetadata', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+    });
+
+    // Function to draw video frames onto the canvas
+    function drawFrame() {
+        ctx.filter = `brightness(${rangeInput.value}%)`;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = filterColor;
+        ctx.fillRect(0, 0, video.videoWidth, video.videoHeight);
+        requestAnimationFrame(drawFrame);
+    }
+
+    // Start drawing frames
+    drawFrame();
+
+    // Capture the canvas stream
+    const canvasStream = canvas.captureStream();
+
+    // Capture the canvas stream
+    const combinedStream = new MediaStream([
+        ...canvasStream.getVideoTracks(),
+        ...stream.getAudioTracks(),
+    ]);
+
     // Create a new MediaRecorder instance to record the media stream
-    recorder = new MediaRecorder(stream);
+    recorder = new MediaRecorder(combinedStream);
 
     // Event listener for when the recording starts
     recorder.addEventListener('start', () => {
